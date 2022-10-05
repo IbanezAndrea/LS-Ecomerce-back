@@ -1,3 +1,4 @@
+const { string } = require('joi');
 const mongoose= require ('mongoose')
 
     const userSchema = new mongoose.Schema(
@@ -18,12 +19,13 @@ const mongoose= require ('mongoose')
             max: [32, 'Too long, max is 32 characters'],  
             required:true
             }],
-        photo:{type: String},
+        photo:{type: String, required:true},
         role:{type: String, required:true},
         from:[{type: String, required:true}],
         verified:{type: Boolean, required:true},
         loggedIn:{type: Boolean, required:true},
-        code: {type: String, required:true}
+        code: {type: String, required:true},
+        addresses: [{type: String}],
         }
     );
 
