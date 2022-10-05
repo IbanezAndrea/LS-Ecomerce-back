@@ -1,6 +1,6 @@
 const Box = require('../models/Box');
 const joi = require('joi');
-const { required } = require('joi');
+
 
 
 const validator = joi.object({
@@ -43,6 +43,30 @@ const boxController = {
                 response: box._id
             })
         } catch (error){
+            res.status(400).json({
+                message: error,
+                success: false
+            })
+        }
+    },
+    getAllBoxes: async (req, res) => {
+        let boxes
+        let query = {}
+        try {
+            boxes = await Box.find(query)
+            if (boxes){
+                res.status(200).json({
+                    message: 'Boxes found!',
+                    response: boxes,
+                    succes: true
+                })
+            } else {
+                res.status(404).json({
+                    message: 'Found nothing',
+                    success: false
+                })
+            }
+        }catch (error){
             res.status(400).json({
                 message: error,
                 success: false
