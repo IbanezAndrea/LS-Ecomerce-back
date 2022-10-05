@@ -52,6 +52,7 @@ const boxController = {
     getAllBoxes: async (req, res) => {
         let boxes
         let query = {}
+        
         try {
             boxes = await Box.find(query)
             if (boxes){
