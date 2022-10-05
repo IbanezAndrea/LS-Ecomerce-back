@@ -52,14 +52,14 @@ const boxController = {
     getAllBoxes: async (req, res) => {
         let boxes
         let query = {}
-        
+
         try {
             boxes = await Box.find(query)
             if (boxes){
                 res.status(200).json({
                     message: 'Boxes found!',
                     response: boxes,
-                    succes: true
+                    success: true
                 })
             } else {
                 res.status(404).json({
