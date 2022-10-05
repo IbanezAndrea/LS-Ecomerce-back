@@ -4,8 +4,9 @@ const mongoose = require('mongoose')
 const recipeSchema = new mongoose.Schema(
     {
         user: {type: mongoose.Types.ObjectId, ref: 'users', required: true},
-        description: {type: string, required: true},
+        description: {type: String, required: true},
         calories: {type: Number, required:true},
+        ingredients: {type: Array, required:true},
         preptime:{type: Number, required: true },
         allergens: {type:String}
     }    

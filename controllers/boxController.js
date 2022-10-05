@@ -1,5 +1,7 @@
 const Box = require('../models/Box');
 const joi = require('joi');
+const { required } = require('joi');
+
 
 const validator = joi.object({
     name:
@@ -10,22 +12,24 @@ const validator = joi.object({
     image:
     joi.string()
     .required(),
-    ingredients:
-    joi.array()
-    .required(),
     price:
     joi.number()
     .required(),
     category:
     joi.string()
-    .required()
+    .required(),
+    recipe:
+    joi.string()
+    .hex()
+    .required(),
 })
+
+
 const boxController = {
     addBox: async (req, res) => {
         let {
             name,
             image,
-            ingredients,
             recipe,
             price,
             category
@@ -40,7 +44,7 @@ const boxController = {
             })
         } catch (error){
             res.status(400).json({
-                message: 'Error bruh',
+                message: error,
                 success: false
             })
         }
