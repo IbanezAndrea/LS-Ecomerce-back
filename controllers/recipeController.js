@@ -98,6 +98,53 @@ const recipeController = {
                 success: false
             })
         }
+    },
+    getOneRecipe: async (req,res) =>{
+        const {id} = req.params
+        try{
+            let recipe = await Recipe.findOne({_id:id})
+            if(recipe){
+                res.status(200).json({
+                    message: "you get one recipe",
+                    response: recipe,
+                    succes: true
+                })
+            }else{
+                res.status(404).json({
+                    message: "couldn't find recipe",
+                    succes: false
+            })
+        }
+        }catch(error){
+            console.log(error)
+            res.status(400).json({
+                message: "Error",
+                succes: false
+            })
+        }
+    },
+    deleteRecipe: async(req, res) => {
+        const {id} = req.params
+        try{
+            let recipe = await Recipe.findOneAndDelete({_id:id})
+           if (recipe) {
+            res.status(200).json({
+                message: "recipe deleted successfully",
+                success: true
+              }) 
+           } else {
+            res.status(404).json({
+                message: "couldn't find recipe",
+                success: false,
+                   })
+                } 
+        } catch(error) {
+            console.log(error);
+            res.status(400).json({
+                message: "error",
+                success: false,
+        })
+    }
     }
 }
 
