@@ -37,7 +37,7 @@ const sendMail = async (mail, code) => {
         form: GOOGLE_USER,
         to: mail,
         subject: "Welcome to My Tineary!",
-        html: email(mail,code, "localhost:4000/auth/signup")
+        html: email(mail,code, "localhost:4000/auth/verify")
         
     }
     await transport.sendMail(mailOptions, (error, response) => {
