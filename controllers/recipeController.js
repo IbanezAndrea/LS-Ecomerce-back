@@ -3,18 +3,6 @@ const Recipe = require('../models/Recipe');
 const joi = require('joi');
 
 
-// let ingredient = joi.object().keys({
-//     name:
-//     joi.string()
-//     .required(),
-//     category:
-//     joi.string()
-//     .required(),
-//     quantity:
-//     joi.string()
-//     .required()
-// })
-
 
 const validator = joi.object({
     user: joi.string()
@@ -61,11 +49,21 @@ const recipeController = {
             calories,
             preptime,
             ingredients,
-            allergens
+            allergens,
+            category
         } = req.body
         try {
-            let result = await validator.validateAsync(req.body)
-            let recipe = await new Recipe(result).save()
+            let result = await validator.validateAsync({
+                user,
+                title,
+                description,
+                calories,
+                preptime,
+                ingredients,
+                allergens,
+                category
+            })
+            let recipe = await new Recipe({...result,approved:false}).save()
             res.status(201).json({
                 message: "New recipe added!",
                 success: true,
@@ -82,7 +80,10 @@ const recipeController = {
         let recipes
         let query = {}
         try{
-            recipes = await Recipe.find(query)
+            recipes = await Recipe.find({
+                ...query,
+                approved: true
+            })
             if (recipes){
                 res.status(200).json({
                     message: "Recipes found!",
@@ -105,7 +106,7 @@ const recipeController = {
     getOneRecipe: async (req,res) =>{
         const {id} = req.params
         try{
-            let recipe = await Recipe.findOne({_id:id})
+            let recipe = await Recipe.findOne({_id:id, approved: true})
             if(recipe){
                 res.status(200).json({
                     message: "you get one recipe",
@@ -130,17 +131,17 @@ const recipeController = {
         const {id} = req.params
         try{
             let recipe = await Recipe.findOneAndDelete({_id:id})
-           if (recipe) {
-            res.status(200).json({
-                message: "recipe deleted successfully",
-                success: true
-              }) 
-           } else {
-            res.status(404).json({
-                message: "couldn't find recipe",
-                success: false,
-                   })
-                } 
+            if (recipe) {
+                res.status(200).json({
+                    message: "recipe deleted successfully",
+                    success: true
+                })
+            } else {
+                res.status(404).json({
+                    message: "couldn't find recipe",
+                    success: false,
+                })
+            }
         } catch(error) {
             console.log(error);
             res.status(400).json({
@@ -148,6 +149,32 @@ const recipeController = {
                 success: false,
         })
     }
+    },
+    approveRecipe: async (req, res) => {
+        let {id} = req.body
+        try {
+            let recipe = await Recipe.findOneAndUpdate({ _id: id }, {
+                approved: true
+                })
+                if (recipe) {
+                res.status(200).json({
+                    message: "Recipe approved",
+                    response: recipe,
+                    success: true
+                })
+            } else {
+                    res.status(404).json({
+                        message: "couldn't find recipe",
+                        success: false
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(400).json({
+                message: "error",
+                succes: false
+            })
+        }
     }
 }
 
