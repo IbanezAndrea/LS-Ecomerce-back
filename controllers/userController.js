@@ -39,8 +39,9 @@ const validator =joi.object({
         .error(new Error("Invalid email")),
     password: 
         joi.string()
+        // .pattern(/^[ñÑA-Za-z _]*[ñÑA-Za-z][ñÑA-Za-z _]*$/).min(3).max(30),
         .pattern(new
-            RegExp('^[a-zA-Z0-9]{3,30}$')),
+            RegExp('^[ñÑa-zA-Z0-9]{3,30}$')),
     role: 
         joi.string()
         .min(3)
