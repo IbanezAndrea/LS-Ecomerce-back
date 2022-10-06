@@ -8,6 +8,8 @@ const validator = joi.object({
     user: joi.string()
         .hex()
         .required(),
+    title:joi.string()
+    .required(),
     description: 
         joi.string()
         .required(),
@@ -42,6 +44,7 @@ const recipeController = {
     addRecipe : async (req, res) => {
         let {
             user,
+            title,
             description,
             calories,
             preptime,
@@ -52,6 +55,7 @@ const recipeController = {
         try {
             let result = await validator.validateAsync({
                 user,
+                title,
                 description,
                 calories,
                 preptime,
