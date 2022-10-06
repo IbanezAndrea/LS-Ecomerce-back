@@ -1,4 +1,3 @@
-const { string } = require('joi');
 const mongoose = require('mongoose')
 
 const recipeSchema = new mongoose.Schema(
@@ -8,8 +7,10 @@ const recipeSchema = new mongoose.Schema(
         calories: {type: Number, required:true},
         ingredients: {type: Array, required:true},
         preptime:{type: Number, required: true },
-        allergens: {type:String}
-    }    
+        allergens: {type: Array},
+        approved: { type: Boolean, required: true },
+        category: {type: String, required:true}
+    }
 )
 
 const Recipe = mongoose.model("recipes", recipeSchema);
