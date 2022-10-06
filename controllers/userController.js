@@ -5,7 +5,25 @@ const crypto = require('crypto');
 const bcryptjs = require('bcryptjs');
 const sendMail = require('../controllers/sendMail');
 
-
+const addressValidator = joi.object({
+    street:
+        joi.string()
+        .required(),
+    houseNumber:
+        joi.number()
+        .required(),
+    postalCode:
+        joi.string()
+        .required(),
+    floor:
+        joi.string(),
+    country:
+        joi.string()
+        .required(),
+    city:
+        joi.string()
+        .required()
+})
 const validator =joi.object({
     name: 
         joi.string()
@@ -36,10 +54,9 @@ const validator =joi.object({
                 }),
             )
         .required()
-        .error(new Error("Invalid email")),
+        .error(new Error("INVALID_EMAIL")),
     password: 
         joi.string()
-        // .pattern(/^[ñÑA-Za-z _]*[ñÑA-Za-z][ñÑA-Za-z _]*$/).min(3).max(30),
         .pattern(new
             RegExp('^[ñÑa-zA-Z0-9]{3,30}$')),
     role: 
@@ -51,14 +68,10 @@ const validator =joi.object({
         joi.string()
         .min(3)
         .max(15)
-        .required(),
-    addresses:
-        joi.string()
         .required()
 })
 const userController ={
     userSignUp: async (req, res) => {
-
         try{
             let result = await validator.validateAsync(req.body)
             let  {
@@ -67,50 +80,56 @@ const userController ={
                 photo,
                 email,
                 password,
-                from,
-                addresses
+                from
             } = result
             let user = await User.findOne({email})
-                if (!user){
-                    let loggedIn = false;
-                    let verified = false;
-                    let code =  crypto
-                        .randomBytes(15)
-                        .toString('hex')
-                    if(from === 'form'){ 
-                        password = bcryptjs.hashSync(password,10);
-                        user = await new User({ name, lastname, photo, email, password: [password], role:"user", from: [from], loggedIn, verified, code, addresses: [addresses]}).save()
-                        sendMail(email,code)
-                        res.status(201).json({
-                            message: "User signed ✔",
-                            success: true,
-                            })
-                    } else{ 
-                        password = bcryptjs.hashSync(password,10);
-                        verified = true,
-                        user = await new User({ name, lastname, photo, email, password: [password], role:"user", from: [from], addresses: [addresses], loggedIn, verified, code }).save()
-                        res.status(201).json({
-                            message: "User signed from "+from,
-                            success: true,
-                        })
-                    } 
-                } else{
-                    if(user.from.includes(from)){ 
-                        res.status(200).json({
-                            message: "User already exists...",
-                            success: false 
-                        })
-                    } else{
-                        user.from.push(from);
-                        user.verified = true;
-                        user.password.push(bcryptjs.hashSync(password,10))
-                        await user.save()
-                        res.status(201).json({
-                            message: "User signed up from "+from,
-                            success: true
-                            })
-                    }
+            if (!user){
+                let loggedIn = false;
+                let verified
+                if(from === 'form'){ 
+                    verified = false
+                } else{ 
+                    verified = true
                 }
+                let code =  crypto
+                    .randomBytes(15)
+                    .toString('hex')
+                password = bcryptjs.hashSync(password,10);
+                await new User({
+                    name,
+                    lastname,
+                    photo,
+                    email,
+                    password: [password],
+                    role: "user",
+                    from: [from],
+                    loggedIn,
+                    verified,
+                    code,
+                    addresses: []
+                }).save()
+                sendMail(email,code)
+                res.status(201).json({
+                    message: "User signed ✔",
+                    success: true,
+                    })
+            } else{
+                if(user.from.includes(from)){ 
+                    res.status(200).json({
+                        message: "User already exists...",
+                        success: false 
+                    })
+                } else{
+                    user.from.push(from);
+                    user.verified = true;
+                    user.password.push(bcryptjs.hashSync(password,10))
+                    await user.save()
+                    res.status(201).json({
+                        message: "User signed up from "+from,
+                        success: true
+                        })
+                }
+            }
         }catch (error){
             console.log(error)  
             res.status(400).json({
@@ -126,7 +145,7 @@ const userController ={
             if (user) {
                 user.verified = true
                 await user.save()
-                res.status("200").redirect(301, 'http://localhost:3000/signin')
+                res.status("200").redirect(301, 'http://localhost:3000/')
 
             } else {
                 res.status("404").json({
@@ -246,7 +265,7 @@ const userController ={
                         success:false
                     })
                 }
-        },
+    },
     getUser: async (req, res) => {
         const { id } = req.params
         try {
@@ -310,12 +329,11 @@ const userController ={
                             name,
                             lastname,
                             photo,
-                            addresses,
                             role
                         } = req.body;
                     if (userRole !== "admin") {
                             putUser = await User.findOneAndUpdate(
-                            { email:email }, {name,lastname,photo,addresses:[addresses]}, { new: true })
+                            { email:email }, {name,lastname,photo}, { new: true })
                                 res.status("200").json({
                                     message: "User updated.",
                                     response: putUser,
@@ -323,7 +341,12 @@ const userController ={
                             })
                     } else if(userRole === "admin") {
                             putUser = await User.findOneAndUpdate(
-                            { email:email }, {name,lastname,photo,addresses:[addresses],role}, { new: true })
+                                { email: email }, {
+                                    name,
+                                    lastname,
+                                    photo,
+                                    role
+                            }, { new: true })
                             res.status("200").json({
                                 message: "User updated.",
                                 response: putUser,
@@ -372,7 +395,7 @@ const userController ={
             })
         }
     },
-    verifyToken: (req, res) => {
+    verifyToken: async (req, res) => {
         if (req.user !== null){
             res.status(200).json({
                 success:true,
@@ -382,7 +405,8 @@ const userController ={
                         name: req.user.name,
                         email: req.user.email,
                         role: req.user.role,
-                        photo:req.user.photo
+                        photo: req.user.photo,
+                        addresses: req.user.addresses
                     }
                 },
                 message: 'Welcome ' + req.user.name+'!'
@@ -393,7 +417,20 @@ const userController ={
                 message: "Sign in please!"
             })
         }
+    },
+    updateAddresses: async (req, res) => {
+        let { address } = req.body
+        let {email} = req.user
+        try {
+            await User.findOneAndUpdate({email},{$push:{addresses:address}})
+        } catch (error) {
+            console.log(error)
+            res.status(400).json({
+                message: "error",
+                succes: false
+            })
         }
+    }
     }
 
 
