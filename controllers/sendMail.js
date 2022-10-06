@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer")
 const { google } = require("googleapis")
 const OAuth2 = google.auth.OAuth2
-const verifyMail = require("../views/verify-mail")
+const email = require("../views/email")
 const {
     GOOGLE_ID,
     GOOGLE_SECRET,
@@ -37,7 +37,7 @@ const sendMail = async (mail, code) => {
         form: GOOGLE_USER,
         to: mail,
         subject: "Welcome to My Tineary!",
-        html: verifyMail(mail,code, "localhost:4000/auth/signup")
+        html: email(mail,code, "localhost:4000/auth/signup")
         
     }
     await transport.sendMail(mailOptions, (error, response) => {
