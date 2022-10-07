@@ -64,6 +64,8 @@ const validator =joi.object({
         .min(3)
         .max(15)
         .required(),
+    addresses:
+        joi.array(),
     from: 
         joi.string()
         .min(3)
@@ -80,7 +82,8 @@ const userController ={
                 photo,
                 email,
                 password,
-                from
+                from,
+                addresses,
             } = result
             let user = await User.findOne({email})
             if (!user){
@@ -106,7 +109,7 @@ const userController ={
                     loggedIn,
                     verified,
                     code,
-                    addresses: []
+                    addresses: [addresses]
                 }).save()
                 sendMail(email,code)
                 res.status(201).json({
