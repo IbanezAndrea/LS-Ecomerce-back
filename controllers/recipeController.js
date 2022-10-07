@@ -22,6 +22,9 @@ const validator = joi.object({
     preptime:
         joi.number()
         .required(),
+    category:
+    joi.string()
+    .required(),
     allergens: 
         joi.array().items(joi.string())
         .required(),
@@ -60,6 +63,7 @@ const recipeController = {
             let result = await validator.validateAsync({
                 user,
                 title,
+                image,
                 description,
                 calories,
                 preptime,
