@@ -23,7 +23,7 @@ const validator = joi.object({
         joi.number()
         .required(),
     allergens: 
-        joi.string()
+        joi.array().items(joi.string())
         .required(),
     ingredients: 
     joi.array()

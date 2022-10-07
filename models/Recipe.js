@@ -9,7 +9,7 @@ const recipeSchema = new mongoose.Schema(
         calories: {type: Number, required:true},
         ingredients: {type: Array, required:true},
         preptime:{type: Number, required: true },
-        allergens: {type: Array},
+        allergens: [{type:Array, required:true}],
         approved: { type: Boolean, required: true },
         category: {type: String, required:true}
     }
