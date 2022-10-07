@@ -36,7 +36,7 @@ const sendMail = async (mail, code) => {
     const mailOptions = {
         form: GOOGLE_USER,
         to: mail,
-        subject: "Welcome to My Tineary!",
+        subject: "Welcome to LS FOOD CO!",
         html: email(mail,code, "localhost:4000/auth/verify")
         
     }
