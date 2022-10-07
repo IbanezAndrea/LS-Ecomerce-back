@@ -160,6 +160,7 @@ const recipeController = {
     },
     approveRecipe: async (req, res) => {
         let {id} = req.params
+        
         try {
             let recipe = await Recipe.findOneAndUpdate({ _id: id }, {
                 approved: true
