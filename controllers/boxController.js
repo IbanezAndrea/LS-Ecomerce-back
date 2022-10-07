@@ -9,9 +9,6 @@ const validator = joi.object({
     .min(5)
     .max(100)
     .required(),
-    image:
-    joi.string()
-    .required(),
     price:
     joi.number()
     .required(),
@@ -26,7 +23,6 @@ const boxController = {
     addBox: async (req, res) => {
         let {
             name,
-            image,
             recipe,
             price
         } = req.body

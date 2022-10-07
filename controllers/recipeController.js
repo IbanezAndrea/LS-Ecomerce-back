@@ -10,6 +10,9 @@ const validator = joi.object({
         .required(),
     title:joi.string()
     .required(),
+    image:
+    joi.string()
+    .required(),
     description: 
         joi.string()
         .required(),
@@ -45,6 +48,7 @@ const recipeController = {
         let {
             user,
             title,
+            image,
             description,
             calories,
             preptime,
