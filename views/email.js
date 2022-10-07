@@ -111,7 +111,7 @@ const email = (mail,code,url) => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:110px;font-family:'Cabin',sans-serif;" align="left">
                               <div>
                                 <!-- <div role="img" aria-label="" style="display:block;width:100%;padding-top:100%;background-image:url('https://www.tasteofhome.com/wp-content/uploads/2018/01/Asparagus-n-Shrimp-with-Angel-Hair_EXPS_CF219_27517_B12_12_1b-20.jpg?resize=700,700');background-repeat:no-repeat;background-size:100% auto;background-position:center center;"></div> -->
-                                <div class="carousel-preview">
+                                <div class="carousel-preview" style="display:flex;flex-direction:column>
                                   <div style="display:flex;flex-direction:column;align-items: center ">
                                     <div option="0" selected>
                                       <img src="https://www.tasteofhome.com/wp-content/uploads/2018/01/Asparagus-n-Shrimp-with-Angel-Hair_EXPS_CF219_27517_B12_12_1b-20.jpg?resize=700,700" width="300" height="300" alt="Slide Preview #1: Slide Image" style="margin-top: 0%;" />
