@@ -5,7 +5,7 @@ let adminPassport = require('../config/adminPassport');
 const {addBox, getAllBoxes,getOneBox,updateBox,deleteBox} = require('../controllers/boxController');
 
 
-router.post('/',adminPassport.authenticate('jwt', { session: false }),addBox);
+router.post('/',/*adminPassport.authenticate('jwt', { session: false }),*/addBox);
 router.get('/',getAllBoxes);
 router.get('/:id',getOneBox);
 router.put('/:id',adminPassport.authenticate('jwt', { session: false }),updateBox);

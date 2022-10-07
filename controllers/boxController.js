@@ -29,7 +29,6 @@ const boxController = {
         try {
             let result = await validator.validateAsync({
                 name,
-                image,
                 recipe,
                 price
             })
@@ -49,9 +48,9 @@ const boxController = {
     getAllBoxes: async (req, res) => {
         let boxes
         let query = {}
-
         try {
             boxes = await Box.find(query)
+                        .populate('recipe')
             if (boxes){
                 res.status(200).json({
                     message: 'Boxes found!',
