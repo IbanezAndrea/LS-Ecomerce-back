@@ -13,6 +13,6 @@ router.post('/signout',passport.authenticate('jwt', { session: false }),userSign
 router.get('/verify/:code',verifyMail);
 router.post('/verify-token',passport.authenticate('jwt', { session: false }),verifyToken);
 router.put('/update',passport.authenticate('jwt', { session: false }),modifyUser);
-router.patch('/update-address',passport.authenticate('jwt', { session: false }),modifyUser);
+router.patch('/update-address',passport.authenticate('jwt', { session: false }),updateAddresses);
 router.delete('/remove',passport.authenticate('jwt', { session: false }),removeUser);
 module.exports = router;
