@@ -85,13 +85,11 @@ const recipeController = {
         }
     },
     getAllRecipes: async (req, res) => {
-        let recipes
-        let query = {}
+        let query = {approved: true}
+
         try{
-            recipes = await Recipe.find({
-                ...query,
-                approved: true
-            })
+            let recipes = await Recipe.find(query)
+            
             if (recipes){
                 res.status(200).json({
                     message: "Recipes found!",
@@ -111,10 +109,43 @@ const recipeController = {
             })
         }
     },
+    getRecipesByFilters: async (req, res) => {
+        let query = {approved: true}
+
+        if ((req.query.category).length > 0){
+            query.category = req.query.category
+        }
+        if ((req.query.title).length > 0){
+            query.title = { $regex: '^' + req.query.title, $options: 'i' };
+        }
+        
+        try{
+            let recipes = await Recipe.find(query)
+            
+            if (recipes){
+                res.status(200).json({
+                    message: "Recipes found!",
+                    response: recipes,
+                    success: true,
+                    })
+                } else {
+                    res.status(404).json({
+                        message: "Found nothing",
+                        success: false
+                    })
+                }
+        } catch (error){
+            res.status(400).json({
+                message: error,
+                success: false
+            })
+        }
+    }
+    ,
     getOneRecipe: async (req,res) =>{
         const {id} = req.params
         try{
-            let recipe = await Recipe.findOne({_id:id, approved: true})
+            let recipe = await Recipe.findOne({_id: id, approved: true})
             if(recipe){
                 res.status(200).json({
                     message: "you get one recipe",
