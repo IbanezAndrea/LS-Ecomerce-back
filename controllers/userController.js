@@ -182,7 +182,8 @@ const userController ={
                                 name: user.name,
                                 email: user.email,
                                 role: user.role,
-                                photo:user.photo
+                                photo: user.photo,
+                                addresses: user.addresses
                             }
 
                             user.loggedIn = true
@@ -209,12 +210,12 @@ const userController ={
                             email: user.email,
                             role: user.role,
                             from: user.from,
-                            photo:user.photo
+                            photo: user.photo,
+                            addresses: user.addresses
                         }
                         const token = jwt.sign({id: user._id}, process.env.KEY_JWT, {expiresIn: 60*60*24})
                         user.loggedIn = true
                         await user.save()
-                        console.log (user)
                         res.status(200).json({
                             success:true,
                             response: {user: loginUser,
@@ -415,7 +416,7 @@ const userController ={
                 message: 'Welcome ' + req.user.name+'!'
             })
         }else {
-            res.json({
+            res.status(401).json({
                 success:false,
                 message: "Sign in please!"
             })
