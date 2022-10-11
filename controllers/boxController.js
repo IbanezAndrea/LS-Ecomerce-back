@@ -12,6 +12,12 @@ const validator = joi.object({
     price:
     joi.number()
     .required(),
+    calification:
+    joi.number()
+    .required(),
+    serves:
+    joi.number()
+    .required(),
     recipe:
     joi.string()
     .hex()
@@ -24,13 +30,17 @@ const boxController = {
         let {
             name,
             recipe,
-            price
+            price,
+            calification,
+            serves
         } = req.body
         try {
             let result = await validator.validateAsync({
                 name,
                 recipe,
-                price
+                price,
+                calification,
+                serves
             })
             let box= await new Box (result).save()
             res.status(201).json({
