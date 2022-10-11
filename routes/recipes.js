@@ -2,13 +2,13 @@ var express = require('express');
 var router = express.Router();
 let passport = require('../config/passport');
 let adminPassport = require('../config/adminPassport');
-const {addRecipe,getAllRecipes,getOneRecipe,deleteRecipe,approveRecipe, getRecipesByFilters} = require('../controllers/recipeController');
+const {addRecipe,getAllRecipes,getOneRecipe,deleteRecipe,approveRecipe, getRecipesByFilters, recipeFromUser} = require('../controllers/recipeController');
 
 router.post('/', addRecipe);
-router.patch('/approve/:id',adminPassport.authenticate('jwt', { session: false }), approveRecipe);
 router.get('/', getAllRecipes);
+router.get('/queryuser',passport.authenticate('jwt', { session: false }), recipeFromUser)
 router.get('/query/', getRecipesByFilters);
+router.patch('/approve/:id',adminPassport.authenticate('jwt', { session: false }), approveRecipe);
 router.get('/:id', getOneRecipe);
 router.delete('/:id',adminPassport.authenticate('jwt', { session: false }), deleteRecipe);
-
 module.exports = router;
