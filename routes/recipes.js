@@ -4,7 +4,7 @@ let passport = require('../config/passport');
 let adminPassport = require('../config/adminPassport');
 const {addRecipe,getAllRecipes,getOneRecipe,deleteRecipe,approveRecipe, getRecipesByFilters, recipeFromUser} = require('../controllers/recipeController');
 
-router.post('/', addRecipe);
+router.post('/', passport.authenticate('jwt', { session: false }), addRecipe);
 router.get('/', getAllRecipes);
 router.get('/queryuser',passport.authenticate('jwt', { session: false }), recipeFromUser)
 router.get('/query/', getRecipesByFilters);

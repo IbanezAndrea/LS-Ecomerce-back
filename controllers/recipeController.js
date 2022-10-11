@@ -49,7 +49,6 @@ const validator = joi.object({
 const recipeController = {
     addRecipe : async (req, res) => {
         let {
-            user,
             title,
             image,
             description,
@@ -59,9 +58,10 @@ const recipeController = {
             allergens,
             category
         } = req.body
+        let {userId} = req.user
         try {
             let result = await validator.validateAsync({
-                user,
+                userId,
                 title,
                 image,
                 description,
