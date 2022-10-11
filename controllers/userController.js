@@ -183,7 +183,8 @@ const userController ={
                                 email: user.email,
                                 role: user.role,
                                 photo: user.photo,
-                                addresses: user.addresses
+                                addresses: user.addresses,
+                                lastname: user.lastname
                             }
 
                             user.loggedIn = true
@@ -211,7 +212,8 @@ const userController ={
                             role: user.role,
                             from: user.from,
                             photo: user.photo,
-                            addresses: user.addresses
+                            addresses: user.addresses,
+                            lastname: user.lastname
                         }
                         const token = jwt.sign({id: user._id}, process.env.KEY_JWT, {expiresIn: 60*60*24})
                         user.loggedIn = true
@@ -410,7 +412,8 @@ const userController ={
                         email: req.user.email,
                         role: req.user.role,
                         photo: req.user.photo,
-                        addresses: req.user.addresses
+                        addresses: req.user.addresses,
+                        lastname: req.user.lastname
                     }
                 },
                 message: 'Welcome ' + req.user.name+'!'
