@@ -245,7 +245,7 @@ const userController ={
         }
     },
     userSignOut: async(req,res) => {
-        const {email} = req.body
+        const {email} = req.user
         try{
             let user = await User.findOne({email:email})
                     if (user){
