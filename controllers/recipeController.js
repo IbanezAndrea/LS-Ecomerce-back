@@ -211,7 +211,36 @@ const recipeController = {
                 succes: false
             })
         }
-    }
+    },
+    recipeFromUser: async(req,res) => {
+        let query = {}
+
+        if (req.user){
+            query.user = req.user.userId
+
+        }
+        try{
+           let recipe = await Recipe.find(query)
+           if (recipe) {
+            res.status(200).json({
+                message: "you get recipes from user "+ query.user,
+                response: recipe,
+                success: true
+              }) 
+           } else {
+            res.status(404).json({
+                message: "couldn't find recipes",
+                success: false,
+                   })
+                } 
+            } catch(error) {
+                console.log(error);
+                res.status(400).json({
+                    message: "error",
+                    success: false,
+            })
+        }
+    },
 }
 
 module.exports = recipeController;
