@@ -80,6 +80,46 @@ const boxController = {
             })
         }
     },
+    getBoxesByFilters: async (req, res) => {
+
+        let query = {};
+        let categoryRecipe = null;
+        console.log('87', req.query)
+
+        if ((req.query.category).length > 0){
+            categoryRecipe = req.query.category
+        }
+        if ((req.query.name).length > 0){
+            query.name = new RegExp(`^${req.query.name}`,"i")
+        }
+        try{
+            let boxes = await Box.find(query).populate("recipe");
+
+            /* Este filtro es funcional para pocos datos, hay que mejorarlo para usarlo en una base de datos mas grande*/
+            if ( categoryRecipe ) {
+                boxes = boxes.filter(element => element.recipe.category === categoryRecipe)
+            }
+
+            if (boxes){
+                res.status(200).json({
+                    message: "Boxes found!",
+                    response: boxes,
+                    success: true,
+                });
+            } else {
+                res.status(404).json({
+                    message: "Found nothing",
+                    success: false
+                });
+            }
+        } catch (error){
+            console.log(error)
+            res.status(400).json({
+                message: error,
+                success: false
+            });
+        }
+    },
     getOneBox: async (req,res) =>{
         const {id} = req.params
         try{

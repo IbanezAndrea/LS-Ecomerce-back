@@ -2,12 +2,7 @@
 const Recipe = require('../models/Recipe');
 const joi = require('joi');
 
-
-
 const validator = joi.object({
-    user: joi.string()
-        .hex()
-        .required(),
     title:joi.string()
     .required(),
     image:
@@ -44,7 +39,7 @@ const validator = joi.object({
         })
     )
     .required()
-    })
+    });
 
 const recipeController = {
     addRecipe : async (req, res) => {
@@ -59,6 +54,8 @@ const recipeController = {
             category
         } = req.body
         let {userId} = req.user
+        console.log(userId)
+        console.log(typeof(userId))
         try {
             let result = await validator.validateAsync({
                 user:userId.toString(),
@@ -71,7 +68,7 @@ const recipeController = {
                 allergens,
                 category
             })
-            let recipe = await new Recipe({...result,approved:false}).save()
+            let recipe = await new Recipe({...result, user: userId, approved:false}).save()
             res.status(201).json({
                 message: "New recipe added!",
                 success: true,
