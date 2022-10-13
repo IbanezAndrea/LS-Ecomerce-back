@@ -123,7 +123,7 @@ const boxController = {
     getOneBox: async (req,res) =>{
         const {id} = req.params
         try{
-            let box = await Box.findOne({_id:id})
+            let box = await Box.findOne({_id:id}).populate("recipe")
             if(box){
                 res.status(200).json({
                     message: "you get one box",
