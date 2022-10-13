@@ -245,6 +245,57 @@ const recipeController = {
             })
         }
     },
+    getNotApprovedRecipes: async (req, res) => {
+        let query = { approved: false }
+
+        try{
+            let recipes = await Recipe.find(query)
+            
+            if (recipes){
+                res.status(200).json({
+                    message: "Recipes found!",
+                    response: recipes,
+                    success: true,
+                    })
+                } else {
+                    res.status(404).json({
+                        message: "Found nothing",
+                        success: false
+                    })
+                }
+        } catch (error){
+            res.status(400).json({
+                message: error,
+                success: false
+            })
+        }
+    },
+    getNotApprovedRecipe: async (req, res) => {
+        let {id} = req.params
+        let query = { approved: false, _id:id }
+
+        try{
+            let recipe = await Recipe.findOne(query)
+            
+            if (recipe){
+                res.status(200).json({
+                    message: "Recipe found!",
+                    response: recipe,
+                    success: true,
+                    })
+                } else {
+                    res.status(404).json({
+                        message: "Found nothing",
+                        success: false
+                    })
+                }
+        } catch (error){
+            res.status(400).json({
+                message: error,
+                success: false
+            })
+        }
+    }
 }
 
 module.exports = recipeController;
