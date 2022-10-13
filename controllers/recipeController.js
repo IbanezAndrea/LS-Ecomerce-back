@@ -61,7 +61,7 @@ const recipeController = {
         let {userId} = req.user
         try {
             let result = await validator.validateAsync({
-                userId,
+                user:userId.toString(),
                 title,
                 image,
                 description,
@@ -77,9 +77,10 @@ const recipeController = {
                 success: true,
                 response: recipe._id
             })
-        } catch (error){
+        } catch (error) {
+        console.log(error)
         res.status(400).json({
-            message: error,
+            message: "ERROR",
             success: false,
             })
         }
@@ -217,7 +218,7 @@ const recipeController = {
         }
     },
     recipeFromUser: async(req,res) => {
-        let query = {}
+        let query = {approved:true}
 
         if (req.user){
             query.user = req.user.userId
