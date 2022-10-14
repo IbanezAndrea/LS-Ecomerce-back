@@ -20,9 +20,10 @@ const commentController = {
     },
     all: async(req,res) =>{
         let comment
-        let query = req.body
+        let {id} = req.params
+        console.log(id)
         try{
-            comment = await Comment.find(query)
+            comment = await Comment.find({recipe:id})
             .populate('user',{name:1,photo:1})
             .populate('recipe',{_id:1})
             res.status(200).json({
