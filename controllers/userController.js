@@ -148,7 +148,7 @@ const userController = {
             if (user) {
                 user.verified = true
                 await user.save()
-                res.status("200").redirect(301, 'http://localhost:3000/')
+                res.status("200").redirect(301, 'https://ls-food-co.herokuapp/')
 
             } else {
                 res.status("404").json({
