@@ -13,15 +13,13 @@ passport.use(
         async (jwt_payload, done) => {
             try {
                 let user = await User.findOne({_id: jwt_payload.id})
-                    if (user){
+                    if (user.role === "admin"){
                         user = {
                             userId: user._id,
                             name: user.name,
                             email:user.email,
                             role:user.role,
-                            photo: user.photo,
-                            addresses: user.addresses,
-                            lastname: user.lastname
+                            photo: user.photo
                         }
                         return done(null, user)
                     } else {
